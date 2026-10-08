@@ -1,4 +1,5 @@
 import './App.css'
+import GraphCanvas from './components/graph/GraphCanvas';
 import { mockGraph } from './mocks/hardcodedGraph'
 import { toCytoscapeElements } from './utils/toCytoscapeElements'
 
@@ -8,7 +9,7 @@ function App() {
   console.log(elements)
   console.log(elements.length)
 
-  return (<div>Check the console</div>)
+  return <GraphCanvas elements={elements}/>
 }
 
 export default App
