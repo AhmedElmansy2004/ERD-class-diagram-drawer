@@ -1,5 +1,5 @@
 import type cytoscape from "cytoscape";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { downloadDataURI } from "../utils/download";
 
 
