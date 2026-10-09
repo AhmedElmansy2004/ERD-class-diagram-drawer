@@ -12,7 +12,7 @@ export const mockGraph: GraphResponse = {
     { id: 'has_dep',    label: 'Has_Dependent', type: 'IDENTIFYING_RELATIONSHIP' },
 
     // Employee attributes
-    { id: 'emp_ssn',    label: 'SSN',       type: 'KEY_ATTRIBUTE' },
+    { id: 'emp_ssn',    label: 'SSN',       type: 'PRIMARY_KEY_ATTRIBUTE' },
     { id: 'emp_name',   label: 'Name',      type: 'COMPOSITE_ATTRIBUTE' },
     { id: 'emp_first',  label: 'FirstName', type: 'ATTRIBUTE' },
     { id: 'emp_last',   label: 'LastName',  type: 'ATTRIBUTE' },
@@ -21,12 +21,12 @@ export const mockGraph: GraphResponse = {
     { id: 'emp_salary', label: 'Salary',    type: 'ATTRIBUTE' },
 
     // Department attributes
-    { id: 'dept_id',    label: 'DeptID',   type: 'KEY_ATTRIBUTE' },
+    { id: 'dept_id',    label: 'DeptID',   type: 'PRIMARY_KEY_ATTRIBUTE' },
     { id: 'dept_name',  label: 'Name',     type: 'ATTRIBUTE' },
     { id: 'dept_loc',   label: 'Location', type: 'MULTIVALUED_ATTRIBUTE' },
 
     // Dependent attributes
-    { id: 'dep_name',   label: 'DepName',   type: 'KEY_ATTRIBUTE' },
+    { id: 'dep_name',   label: 'DepName',   type: 'PRIMARY_KEY_ATTRIBUTE' },
     { id: 'dep_birth',  label: 'BirthDate', type: 'ATTRIBUTE' },
   ],
 

@@ -42,7 +42,7 @@ export const graphStyles: cytoscape.StylesheetJson = [
     style: { shape: 'ellipse', width: 90, height: 40 },
   },
   {
-    selector: 'node[type = "KEY_ATTRIBUTE"]',
+    selector: 'node[type = "PRIMARY_KEY_ATTRIBUTE"], node[type = "FOREIGN_KEY_ATTRIBUTE"], node[type = "PARTIAL_KEY_ATTRIBUTE"]',
     style: { 'font-weight': 'bold' },
   },
   {
