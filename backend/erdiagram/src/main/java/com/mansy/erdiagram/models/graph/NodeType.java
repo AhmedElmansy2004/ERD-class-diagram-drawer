@@ -1,5 +1,15 @@
 package com.mansy.erdiagram.models.graph;
 
-public class NodeType {
-    
+public enum NodeType {
+    ENTITY,
+    WEAK_ENTITY,
+    ATTRIBUTE,
+    PRIMARY_KEY_ATTRIBUTE,
+    FOREIGN_KEY_ATTRIBUTE,
+    PARTIAL_KEY_ATTRIBUTE,
+    MULTIVALUED_ATTRIBUTE,
+    COMPOSITE_ATTRIBUTE,
+    DERIVED_ATTRIBUTE,
+    RELATIONSHIP,
+    IDENTIFYING_RELATIONSHIP,
 }
