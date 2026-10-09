@@ -1,12 +1,6 @@
 import { useMemo, useState } from "react";
 import { mockGraph } from "../mocks/hardcodedGraph";
-import type { GraphResponse } from "../types/graph";
 import { toCytoscapeElements } from "../utils/toCytoscapeElements";
-
-function isGraphResponse(value: unknown): value is GraphResponse{
-    const v = value as GraphResponse
-    return !!v && Array.isArray(v.nodes) && Array.isArray(v.edges)
-}
 
 export function useDiagram() {
     const [graph, setGraph] = useState(mockGraph)
@@ -15,14 +9,27 @@ export function useDiagram() {
 
     const elements = useMemo(() => toCytoscapeElements(graph), [graph])
 
-    function loadFromJSON(json: unknown){
-        if(!isGraphResponse(json)){
-            setError('File must contain nodes and edges')
+    async function loadFromJSON(json: unknown){
+        
+        const response = await fetch("http://localhost:8080/api/diagram", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(json)
+                            })
+
+        if(!response.ok){
+            console.log('Error loading from backend')
+            setError('Error loading from backend')
             setGraph(mockGraph)
             return
         }
+
+        console.log("connection success!!!")
+
         setError(null)
-        setGraph(json)
+        setGraph(await response.json())
     }
 
     function generateFromText(description: string){
