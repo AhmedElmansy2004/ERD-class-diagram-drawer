@@ -2,9 +2,10 @@ package com.mansy.erdiagram.models.erd;
 
 public record Relationship(
     String name,
-    Entity entity1,
-    Entity entity2,
-    String participation1,
-    String participation2,
+    String entity1,
+    String entity2,
+    Participation participation1,
+    Participation participation2,
     String cardinality,
-    boolean isIdentifying) {}
+    boolean isIdentifying
+) {}
