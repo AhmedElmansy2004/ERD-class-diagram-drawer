@@ -32,19 +32,31 @@ export function useDiagram() {
         setGraph(await response.json())
     }
 
-    function generateFromText(description: string){
+    async function generateFromText(description: string){
         setLoading(true)
         setError(null)
-        try{
-            console.log(description)
-            throw new Error('Backend not connected yet')
-        }
-        catch (e){
-            setError(e instanceof Error ? e.message: 'Something went wrong')
-        }
-        finally{
+
+        const response = await fetch("http://localhost:8080/api/generate",{
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify({description})
+                                }
+        )
+
+        if(!response.ok){
+            console.log('Error loading from backend')
+            setError('Error loading from backend')
+            setGraph(mockGraph)
             setLoading(false)
+            return
         }
+        setLoading(false)
+        console.log("connection success!!!")
+
+        setError(null)
+        setGraph(await response.json())
     }
 
     return {elements, loading, error, loadFromJSON, generateFromText}
