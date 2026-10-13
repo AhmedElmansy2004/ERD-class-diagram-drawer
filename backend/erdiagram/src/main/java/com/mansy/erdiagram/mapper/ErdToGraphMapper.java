@@ -3,8 +3,6 @@ package com.mansy.erdiagram.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
 import com.mansy.erdiagram.models.erd.*;
 import com.mansy.erdiagram.models.graph.*;
 
