@@ -9,7 +9,6 @@ import com.google.genai.Client;
 import com.google.genai.errors.ApiException;
 import com.google.genai.types.GenerateContentConfig;
 import com.mansy.erdiagram.exception.GenerationException;
-import com.mansy.erdiagram.models.graph.Graph;
 
 @Component
 public class GeminiClient {
@@ -24,12 +23,12 @@ public class GeminiClient {
         this.json = json;
     }
 
-    public Graph generate(String description) {
+    public String generate(String description) {
         try {
-            return parse(call(prompts.build(description)));
+            return call(prompts.build(description));
         } catch (JacksonException first) {
             try {   // one retry, telling the model what went wrong
-                return parse(call(prompts.buildRetry(description, first.getOriginalMessage())));
+                return call(prompts.buildRetry(description, first.getOriginalMessage()));
             } catch (JacksonException second) {
                 throw new GenerationException(
                         HttpStatus.BAD_GATEWAY, "Model returned invalid ER JSON", second);
@@ -54,7 +53,7 @@ public class GeminiClient {
             }
             return text;
         } catch (GenerationException e) {
-            throw e;   // already translated, don't re-wrap
+            throw e;
         } catch (ApiException e) {
             boolean busy = e.code() == 429 || e.code() == 503;
             throw new GenerationException(
@@ -64,9 +63,5 @@ public class GeminiClient {
         } catch (RuntimeException e) {
             throw new GenerationException(HttpStatus.BAD_GATEWAY, "Gemini request failed", e);
         }
-    }
-
-    private Graph parse(String text) throws JacksonException {
-        return json.readValue(text, Graph.class);
     }
 }
