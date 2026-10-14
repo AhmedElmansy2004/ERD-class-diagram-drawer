@@ -12,51 +12,49 @@ export const mockGraph: GraphResponse = {
     { id: 'has_dep',    label: 'Has_Dependent', type: 'IDENTIFYING_RELATIONSHIP' },
 
     // Employee attributes
-    { id: 'emp_ssn',    label: 'SSN',       type: 'PRIMARY_KEY_ATTRIBUTE' },
-    { id: 'emp_name',   label: 'Name',      type: 'COMPOSITE_ATTRIBUTE' },
-    { id: 'emp_first',  label: 'FirstName', type: 'ATTRIBUTE' },
-    { id: 'emp_last',   label: 'LastName',  type: 'ATTRIBUTE' },
-    { id: 'emp_phone',  label: 'Phone',     type: 'MULTIVALUED_ATTRIBUTE' },
-    { id: 'emp_age',    label: 'Age',       type: 'DERIVED_ATTRIBUTE' },
-    { id: 'emp_salary', label: 'Salary',    type: 'ATTRIBUTE' },
+    { id: 'emp_ssn',    label: 'SSN',       type: 'ATTRIBUTE',             key: 'PRIMARY_KEY' },
+    { id: 'emp_name',   label: 'Name',      type: 'COMPOSITE_ATTRIBUTE',   key: 'NONE' },
+    { id: 'emp_first',  label: 'FirstName', type: 'ATTRIBUTE',             key: 'NONE' },
+    { id: 'emp_last',   label: 'LastName',  type: 'ATTRIBUTE',             key: 'NONE' },
+    { id: 'emp_phone',  label: 'Phone',     type: 'MULTIVALUED_ATTRIBUTE', key: 'NONE' },
+    { id: 'emp_age',    label: 'Age',       type: 'DERIVED_ATTRIBUTE',     key: 'NONE' },
+    { id: 'emp_salary', label: 'Salary',    type: 'ATTRIBUTE',             key: 'NONE' },
 
     // Department attributes
-    { id: 'dept_id',    label: 'DeptID',   type: 'PRIMARY_KEY_ATTRIBUTE' },
-    { id: 'dept_name',  label: 'Name',     type: 'ATTRIBUTE' },
-    { id: 'dept_loc',   label: 'Location', type: 'MULTIVALUED_ATTRIBUTE' },
+    { id: 'dept_id',    label: 'DeptID',   type: 'ATTRIBUTE',             key: 'PRIMARY_KEY' },
+    { id: 'dept_name',  label: 'Name',     type: 'ATTRIBUTE',             key: 'NONE' },
+    { id: 'dept_loc',   label: 'Location', type: 'MULTIVALUED_ATTRIBUTE', key: 'NONE' },
 
-    // Dependent attributes
-    { id: 'dep_name',   label: 'DepName',   type: 'PRIMARY_KEY_ATTRIBUTE' },
-    { id: 'dep_birth',  label: 'BirthDate', type: 'ATTRIBUTE' },
+    // Dependent attributes (weak entity: partial key, not primary)
+    { id: 'dep_name',   label: 'DepName',   type: 'ATTRIBUTE', key: 'PARTIAL_KEY' },
+    { id: 'dep_birth',  label: 'BirthDate', type: 'ATTRIBUTE', key: 'NONE' },
   ],
 
   edges: [
     // Employee -> attributes
-    { id: 'a1', source: 'emp', target: 'emp_ssn',    type: 'ATTRIBUTE_LINK' },
-    { id: 'a2', source: 'emp', target: 'emp_name',   type: 'ATTRIBUTE_LINK' },
-    { id: 'a3', source: 'emp', target: 'emp_phone',  type: 'ATTRIBUTE_LINK' },
-    { id: 'a4', source: 'emp', target: 'emp_age',    type: 'ATTRIBUTE_LINK' },
-    { id: 'a5', source: 'emp', target: 'emp_salary', type: 'ATTRIBUTE_LINK' },
+    { id: 'a1', source: 'emp', target: 'emp_ssn' },
+    { id: 'a2', source: 'emp', target: 'emp_name' },
+    { id: 'a3', source: 'emp', target: 'emp_phone' },
+    { id: 'a4', source: 'emp', target: 'emp_age' },
+    { id: 'a5', source: 'emp', target: 'emp_salary' },
 
     // composite Name -> parts
-    { id: 'c1', source: 'emp_name', target: 'emp_first', type: 'ATTRIBUTE_LINK' },
-    { id: 'c2', source: 'emp_name', target: 'emp_last',  type: 'ATTRIBUTE_LINK' },
+    { id: 'c1', source: 'emp_name', target: 'emp_first' },
+    { id: 'c2', source: 'emp_name', target: 'emp_last' },
 
     // Department -> attributes
-    { id: 'a6', source: 'dept', target: 'dept_id',   type: 'ATTRIBUTE_LINK' },
-    { id: 'a7', source: 'dept', target: 'dept_name', type: 'ATTRIBUTE_LINK' },
-    { id: 'a8', source: 'dept', target: 'dept_loc',  type: 'ATTRIBUTE_LINK' },
+    { id: 'a6', source: 'dept', target: 'dept_id' },
+    { id: 'a7', source: 'dept', target: 'dept_name' },
+    { id: 'a8', source: 'dept', target: 'dept_loc' },
 
     // Dependent -> attributes
-    { id: 'a9',  source: 'dependent', target: 'dep_name',  type: 'ATTRIBUTE_LINK' },
-    { id: 'a10', source: 'dependent', target: 'dep_birth', type: 'ATTRIBUTE_LINK' },
+    { id: 'a9',  source: 'dependent', target: 'dep_name' },
+    { id: 'a10', source: 'dependent', target: 'dep_birth' },
 
-    // Works_In: Employee (total, N) --- Department (partial, 1)
-    { id: 'r1', source: 'emp',  target: 'works_in', type: 'RELATIONSHIP_LINK', label: 'N', participation: 'TOTAL' },
-    { id: 'r2', source: 'dept', target: 'works_in', type: 'RELATIONSHIP_LINK', label: '1', participation: 'PARTIAL' },
-
-    // Has_Dependent: Employee (partial, min-max) --- Dependent (total, min-max)
-    { id: 'r3', source: 'emp',       target: 'has_dep', type: 'RELATIONSHIP_LINK', label: '(0,N)', participation: 'PARTIAL' },
-    { id: 'r4', source: 'dependent', target: 'has_dep', type: 'RELATIONSHIP_LINK', label: '(1,1)', participation: 'TOTAL' },
+    // relationship -> entity, same direction as the mapper
+    { id: 'r1', source: 'works_in', target: 'emp',       label: 'N',     participation: 'TOTAL' },
+    { id: 'r2', source: 'works_in', target: 'dept',      label: '1',     participation: 'PARTIAL' },
+    { id: 'r3', source: 'has_dep',  target: 'emp',       label: '(0,N)', participation: 'PARTIAL' },
+    { id: 'r4', source: 'has_dep',  target: 'dependent', label: '(1,1)', participation: 'TOTAL' },
   ],
 };
