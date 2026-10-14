@@ -1,10 +1,13 @@
 import { useState, type ChangeEvent } from 'react'
+import type { Erdiagram } from '../../types/erdiagram';
+import { mapErdToGraph } from '../../utils/erdMapper';
+import type { GraphResponse } from '../../types/graph';
 
 interface props{
-    onUpload: (json: unknown) => void
+    setGraph: (g: GraphResponse) => void
 }
 
-export default function JsonUploadPanel({ onUpload }: props) {
+export default function JsonUploadPanel({ setGraph }: props) {
 
     const [error, setError] = useState<string | null>();
 
@@ -14,12 +17,15 @@ export default function JsonUploadPanel({ onUpload }: props) {
         if(!file) return
 
         try{
-            const parsed = JSON.parse(await file.text())
+            const erd = JSON.parse(await file.text()) as Erdiagram
+            if (!Array.isArray(erd?.entities) || !Array.isArray(erd?.relationships))
+                throw new Error('File must contain "entities" and "relationships" arrays')
+
+            setGraph(mapErdToGraph(erd))
             setError(null)
-            onUpload(parsed)
         }
-        catch{
-            setError("File parsed is not a valid JSON")
+        catch(err){
+            setError(err instanceof Error? err.message: 'Invalid Diagram')
         }
         e.target.value = ''
     }

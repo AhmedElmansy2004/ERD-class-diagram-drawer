@@ -9,55 +9,25 @@ export function useDiagram() {
 
     const elements = useMemo(() => toCytoscapeElements(graph), [graph])
 
-    async function loadFromJSON(json: unknown){
-        
-        const response = await fetch("http://localhost:8080/api/diagram", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify(json)
-                            })
-
-        if(!response.ok){
-            console.log('Error loading from backend')
-            setError('Error loading from backend')
-            setGraph(mockGraph)
-            return
-        }
-
-        console.log("connection success!!!")
-
-        setError(null)
-        setGraph(await response.json())
-    }
-
     async function generateFromText(description: string){
         setLoading(true)
-        setError(null)
-
-        const response = await fetch("http://localhost:8080/api/generate",{
+        try {
+            const response = await fetch("http://localhost:8080/api/generate",{
                                     method: "POST",
                                     headers: {
                                         "Content-Type": "application/json"
                                     },
                                     body: JSON.stringify({description})
                                 }
-        )
-
-        if(!response.ok){
-            console.log('Error loading from backend')
-            setError('Error loading from backend')
-            setGraph(mockGraph)
+            )
+            if (!response.ok) { setError('Error loading from backend'); return }
+            setGraph(await response.json())
+        } catch {
+            setError('Could not reach the backend')
+        } finally {
             setLoading(false)
-            return
         }
-        setLoading(false)
-        console.log("connection success!!!")
-
-        setError(null)
-        setGraph(await response.json())
     }
 
-    return {elements, loading, error, loadFromJSON, generateFromText}
+    return {elements, loading, error, setGraph, generateFromText}
 }
