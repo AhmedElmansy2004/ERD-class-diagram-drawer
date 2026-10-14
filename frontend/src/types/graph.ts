@@ -1,23 +1,20 @@
+import type { KeyType, Participation } from "./erdiagram";
+
 export type NodeType = 
     | 'ENTITY'
     | 'WEAK_ENTITY' 
     | 'ATTRIBUTE'
-    | 'PRIMARY_KEY_ATTRIBUTE'
-    | 'FOREIGN_KEY_ATTRIBUTE'
-    | 'PARTIAL_KEY_ATTRIBUTE'
     | 'MULTIVALUED_ATTRIBUTE'
     | 'COMPOSITE_ATTRIBUTE'
     | 'DERIVED_ATTRIBUTE'
     | 'RELATIONSHIP'
-    | 'IDENTIFYING_RELATIONSHIP';
-
-export type EdgeType = 'ATTRIBUTE_LINK' | 'RELATIONSHIP_LINK';
-export type Participation = 'PARTIAL' | 'TOTAL';
+    | 'IDENTIFYING_RELATIONSHIP' 
 
 export interface GraphNode{
     id: string;
     label: string;
     type: NodeType;
+    key?: KeyType;
 }
 
 export interface GraphEdge{
@@ -25,7 +22,6 @@ export interface GraphEdge{
     label?: string;
     source: string;
     target: string;
-    type: EdgeType;
     participation?: Participation;
 }
 

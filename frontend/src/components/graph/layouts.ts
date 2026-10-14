@@ -5,7 +5,8 @@ export const erLayout = {
   quality: 'proof',
   randomize: true,
   animate: false,
-  nodeRepulsion: 8000,
-  idealEdgeLength: 80,
-  padding: 30,
+  nodeRepulsion: 15000,
+  idealEdgeLength: 120,
+  nodeSeparation: 100,
+  padding: 40,
 } as cytoscape.LayoutOptions;

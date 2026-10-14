@@ -4,7 +4,8 @@ import type { GraphResponse } from "../types/graph";
 export function toCytoscapeElements(graph: GraphResponse): ElementDefinition[]{
 
     const nodes = graph.nodes.map((n) => ({
-        data: {id: n.id, label: n.label, type: n.type}
+        data: {id: n.id, label: n.label, type: n.type, key: n.key},
+        position: { x: Math.random() * 600, y: Math.random() * 600 },
     }));
 
     const edges = graph.edges.map((e) => ({
@@ -12,7 +13,6 @@ export function toCytoscapeElements(graph: GraphResponse): ElementDefinition[]{
                 label: e.label,
                 source: e.source,
                 target: e.target,
-                type: e.type,
                 participation: e.participation
             }
     }));

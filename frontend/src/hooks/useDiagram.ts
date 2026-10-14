@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { mockGraph } from "../mocks/hardcodedGraph";
 import { toCytoscapeElements } from "../utils/toCytoscapeElements";
+import { mapErdToGraph } from "../utils/erdMapper";
+import type { Erdiagram } from "../types/erdiagram";
 
 export function useDiagram() {
     const [graph, setGraph] = useState(mockGraph)
@@ -9,55 +11,27 @@ export function useDiagram() {
 
     const elements = useMemo(() => toCytoscapeElements(graph), [graph])
 
-    async function loadFromJSON(json: unknown){
-        
-        const response = await fetch("http://localhost:8080/api/diagram", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify(json)
-                            })
-
-        if(!response.ok){
-            console.log('Error loading from backend')
-            setError('Error loading from backend')
-            setGraph(mockGraph)
-            return
-        }
-
-        console.log("connection success!!!")
-
-        setError(null)
-        setGraph(await response.json())
-    }
-
     async function generateFromText(description: string){
         setLoading(true)
         setError(null)
-
-        const response = await fetch("http://localhost:8080/api/generate",{
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json"
-                                    },
-                                    body: JSON.stringify({description})
-                                }
-        )
-
-        if(!response.ok){
-            console.log('Error loading from backend')
-            setError('Error loading from backend')
-            setGraph(mockGraph)
+        try {
+            const response = await fetch("http://localhost:8080/api/generate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ description }),
+            })
+            if (!response.ok) {
+                const body = await response.json().catch(() => null)
+                throw new Error(body?.message ?? `Backend error (${response.status})`)
+            }
+            const erd = (await response.json()) as Erdiagram
+            setGraph(mapErdToGraph(erd))
+        } catch (e) {
+            setError(e instanceof Error ? e.message : 'Generation failed')
+        } finally {
             setLoading(false)
-            return
         }
-        setLoading(false)
-        console.log("connection success!!!")
-
-        setError(null)
-        setGraph(await response.json())
     }
 
-    return {elements, loading, error, loadFromJSON, generateFromText}
+    return {elements, loading, error, setGraph, generateFromText}
 }
