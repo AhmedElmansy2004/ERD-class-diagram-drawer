@@ -4,12 +4,10 @@ import java.util.List;
 
 public record Attribute(
     String name, 
-    List<String> composite,
-    boolean isPrimaryKey,
-    boolean isForeignKey,
-    boolean isMultiValued,
-    boolean isDerived,
-    boolean isPartialKey
+    KeyType keyType,
+    AttributeType attributeType,
+    List<String> composite
+    
 ){
     public Attribute {
         composite = (composite == null) ? List.of() : List.copyOf(composite);
